@@ -16,6 +16,7 @@
 
 package jp.co.cyberagent.android.gpuimage;
 
+import android.content.Context;
 import android.opengl.GLES20;
 
 public class GPUImageLookupFilter extends GPUImageTwoInputFilter {
@@ -60,12 +61,16 @@ public class GPUImageLookupFilter extends GPUImageTwoInputFilter {
     private int mIntensityLocation;
     private float mIntensity;
 
-    public GPUImageLookupFilter() {
-        this(1.0f);
+    public GPUImageLookupFilter(Context context) {
+        this(1.0f, R.drawable.lookup, context);
     }
 
-    public GPUImageLookupFilter(final float intensity) {
-        super(LOOKUP_FRAGMENT_SHADER);
+    public GPUImageLookupFilter(int textureResourceId, Context context) {
+        this(1.0f, textureResourceId, context);
+    }
+
+    public GPUImageLookupFilter(final float intensity, int textureResourceId, Context context) {
+        super(LOOKUP_FRAGMENT_SHADER, textureResourceId, context);
         mIntensity = intensity;
     }
 

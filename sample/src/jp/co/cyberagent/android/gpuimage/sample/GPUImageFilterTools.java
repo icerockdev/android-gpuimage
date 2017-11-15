@@ -245,9 +245,7 @@ public class GPUImageFilterTools {
                 return createBlendFilter(context, GPUImageNormalBlendFilter.class);
 
             case LOOKUP_AMATORKA:
-                GPUImageLookupFilter amatorka = new GPUImageLookupFilter();
-                amatorka.setBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.lookup_amatorka));
-                return amatorka;
+                return new GPUImageAmatorkaFilter(context);
             case GAUSSIAN_BLUR:
                 return new GPUImageGaussianBlurFilter();
             case CROSSHATCH:

@@ -21,7 +21,10 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import jp.co.cyberagent.android.gpuimage.util.TextureRotationUtil;
+
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 
 public class GPUImageTwoInputFilter extends GPUImageFilter {
@@ -47,6 +50,12 @@ public class GPUImageTwoInputFilter extends GPUImageFilter {
 
     public GPUImageTwoInputFilter(String fragmentShader) {
         this(VERTEX_SHADER, fragmentShader);
+    }
+
+    public GPUImageTwoInputFilter(String fragmentShader, int textureResourceId, Context context) {
+        this(VERTEX_SHADER, fragmentShader);
+        Bitmap inputTexture = BitmapFactory.decodeResource(context.getResources(), textureResourceId);
+        setBitmap(inputTexture);
     }
 
     public GPUImageTwoInputFilter(String vertexShader, String fragmentShader) {
