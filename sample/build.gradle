@@ -26,14 +26,16 @@ android {
     lintOptions {
         abortOnError true
     }
+    buildToolsVersion '26.0.2'
 }
 repositories {
     jcenter()
+    google()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
     compile project(':library')
-//    compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:+@aar'
+//    compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
     compile 'com.android.support:support-v4:23.1.1'
 }
