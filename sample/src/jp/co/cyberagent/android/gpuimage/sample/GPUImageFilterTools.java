@@ -32,6 +32,8 @@ public class GPUImageFilterTools {
     public static void showDialog(final Context context,
             final OnGpuImageFilterChosenListener listener) {
         final FilterList filters = new FilterList();
+        filters.addFilter("IR normal blend", FilterType.IR_NORMAL_BLEND);
+        filters.addFilter("IR difference blend", FilterType.IR_DIFFERENCE_BLEND);
         filters.addFilter("Contrast", FilterType.CONTRAST);
         filters.addFilter("Invert", FilterType.INVERT);
         filters.addFilter("Pixelation", FilterType.PIXELATION);
@@ -129,6 +131,10 @@ public class GPUImageFilterTools {
 
     private static GPUImageFilter createFilterForType(final Context context, final FilterType type) {
         switch (type) {
+            case IR_NORMAL_BLEND:
+                return new IRGPUImageNormalBlendFilter(R.drawable.ic_launcher, context);
+            case IR_DIFFERENCE_BLEND:
+                return new IRGPUImageDifferenceBlendFilter(R.drawable.ic_launcher, context);
             case CONTRAST:
                 return new GPUImageContrastFilter(2.0f);
             case GAMMA:
@@ -328,7 +334,7 @@ public class GPUImageFilterTools {
         BLEND_DISSOLVE, BLEND_EXCLUSION, BLEND_SOURCE_OVER, BLEND_HARD_LIGHT, BLEND_LIGHTEN, BLEND_ADD, BLEND_DIVIDE, BLEND_MULTIPLY, BLEND_OVERLAY, BLEND_SCREEN, BLEND_ALPHA,
         BLEND_COLOR, BLEND_HUE, BLEND_SATURATION, BLEND_LUMINOSITY, BLEND_LINEAR_BURN, BLEND_SOFT_LIGHT, BLEND_SUBTRACT, BLEND_CHROMA_KEY, BLEND_NORMAL, LOOKUP_AMATORKA,
         GAUSSIAN_BLUR, CROSSHATCH, BOX_BLUR, CGA_COLORSPACE, DILATION, KUWAHARA, RGB_DILATION, SKETCH, TOON, SMOOTH_TOON, BULGE_DISTORTION, GLASS_SPHERE, HAZE, LAPLACIAN, NON_MAXIMUM_SUPPRESSION,
-        SPHERE_REFRACTION, SWIRL, WEAK_PIXEL_INCLUSION, FALSE_COLOR, COLOR_BALANCE, LEVELS_FILTER_MIN, BILATERAL_BLUR, HALFTONE, TRANSFORM2D
+        SPHERE_REFRACTION, SWIRL, WEAK_PIXEL_INCLUSION, FALSE_COLOR, COLOR_BALANCE, LEVELS_FILTER_MIN, BILATERAL_BLUR, HALFTONE, TRANSFORM2D, IR_NORMAL_BLEND, IR_DIFFERENCE_BLEND
     }
 
     private static class FilterList {
@@ -407,6 +413,8 @@ public class GPUImageFilterTools {
                 adjuster = new BilateralAdjuster().filter(filter);
             } else if (filter instanceof GPUImageTransformFilter) {
                 adjuster = new RotateAdjuster().filter(filter);
+            } else if (filter instanceof IRGPUImageOpacityBlendFilter) {
+                adjuster = new IROpacityAdjuster().filter(filter);
             }
             else {
 
@@ -445,6 +453,13 @@ public class GPUImageFilterTools {
 
             protected int range(final int percentage, final int start, final int end) {
                 return (end - start) * percentage / 100 + start;
+            }
+        }
+
+        private class IROpacityAdjuster extends Adjuster<IRGPUImageOpacityBlendFilter> {
+            @Override
+            public void adjust(int percentage) {
+                getFilter().setOpacity(range(percentage, 0.0f, 1.0f));
             }
         }
 

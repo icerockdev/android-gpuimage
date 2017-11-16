@@ -34,8 +34,8 @@ public class IRGPUImageOpacityBlendFilter extends GPUImageTwoInputFilter {
                     "    gl_FragColor = vec4(resultColor, resultAlpha);\n" +
                     " }";
 
-    private static final String DEFAULT_BLEND_SHADER_HELPER_FUNCTION = "color = base;";
-    private static final String DEFAULT_BLEND_SHADER_CODE = "";
+    private static final String DEFAULT_BLEND_SHADER_HELPER_FUNCTION = "";
+    private static final String DEFAULT_BLEND_SHADER_CODE = "color = base;";
     private static final float DEFAULT_OPACITY = 0.5f;
 
     private float mOpacity;
