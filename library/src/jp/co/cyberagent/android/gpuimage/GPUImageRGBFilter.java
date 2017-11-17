@@ -37,7 +37,7 @@ public class GPUImageRGBFilter extends GPUImageFilter {
     		"  {\n" +
     		"      highp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);\n" +
     		"      \n" +
-    		"      gl_FragColor = vec4(textureColor.r * red, textureColor.g * green, textureColor.b * blue, 1.0);\n" +
+    		"      gl_FragColor = vec4(textureColor.r * red, textureColor.g * green, textureColor.b * blue, textureColor.a);\n" +
     		"  }\n";
 
     private int mRedLocation;
