@@ -200,9 +200,19 @@ public class GPUImageFilterGroup extends GPUImageFilter {
                 if (i == 0) {
                     filter.onDraw(previousTexture, cubeBuffer, textureBuffer);
                 } else if (i == size - 1) {
-                    filter.onDraw(previousTexture, mGLCubeBuffer, (size % 2 == 0) ? mGLTextureFlipBuffer : mGLTextureBuffer);
+                    if (filter instanceof GPUImageTwoInputFilter && ((GPUImageTwoInputFilter) filter).getFilterSource2() != null) {
+                        ((GPUImageTwoInputFilter) filter).setFilterSourceTexture2(previousTexture);
+                        filter.onDraw(mFrameBufferTextures[i-3], mGLCubeBuffer, (size % 2 == 0) ? mGLTextureFlipBuffer : mGLTextureBuffer);
+                    } else {
+                        filter.onDraw(previousTexture, mGLCubeBuffer, (size % 2 == 0) ? mGLTextureFlipBuffer : mGLTextureBuffer);
+                    }
                 } else {
-                    filter.onDraw(previousTexture, mGLCubeBuffer, mGLTextureBuffer);
+                    if (filter instanceof GPUImageTwoInputFilter && ((GPUImageTwoInputFilter) filter).getFilterSource2() != null) {
+                        ((GPUImageTwoInputFilter) filter).setFilterSourceTexture2(previousTexture);
+                        filter.onDraw(mFrameBufferTextures[i-3], mGLCubeBuffer, mGLTextureBuffer);
+                    } else {
+                        filter.onDraw(previousTexture, mGLCubeBuffer, mGLTextureBuffer);
+                    }
                 }
 
                 if (isNotLast) {
