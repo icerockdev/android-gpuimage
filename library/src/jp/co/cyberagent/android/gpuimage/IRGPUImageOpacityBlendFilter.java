@@ -64,6 +64,13 @@ public class IRGPUImageOpacityBlendFilter extends GPUImageTwoInputFilter {
         this(DEFAULT_BLEND_SHADER_HELPER_FUNCTION, blendShaderCode, opacity, textureResourceId, context);
     }
 
+    public IRGPUImageOpacityBlendFilter(String blendShaderHelperFunctionsCode, String blendShaderCode,
+                                        int textureResourceId, Context context) {
+        super(String.format(OPACITY_FRAGMENT_SHADER_TEMPLATE, blendShaderHelperFunctionsCode, blendShaderCode),
+                textureResourceId, context);
+        mOpacity = DEFAULT_OPACITY;
+    }
+
     public IRGPUImageOpacityBlendFilter(String blendShaderHelperFunctionsCode, String blendShaderCode, float opacity,
                                         int textureResourceId, Context context) {
         super(String.format(OPACITY_FRAGMENT_SHADER_TEMPLATE, blendShaderHelperFunctionsCode, blendShaderCode),
