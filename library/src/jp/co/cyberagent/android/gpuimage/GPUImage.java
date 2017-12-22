@@ -269,7 +269,7 @@ public class GPUImage {
      * @return the current image with filter applied
      */
     public Bitmap getBitmapWithFilterApplied() {
-        return getBitmapWithFilterApplied(mCurrentBitmap);
+        return getBitmapWithFilterApplied(mCurrentBitmap, mCurrentBitmap.getWidth(), mCurrentBitmap.getHeight());
     }
 
     /**
@@ -278,7 +278,7 @@ public class GPUImage {
      * @param bitmap the bitmap on which the current filter should be applied
      * @return the bitmap with filter applied
      */
-    public Bitmap getBitmapWithFilterApplied(final Bitmap bitmap) {
+    public Bitmap getBitmapWithFilterApplied(final Bitmap bitmap, int outputWidth, int outputHeight) {
         if (mGlSurfaceView != null) {
             mRenderer.deleteImage();
             mRenderer.runOnDraw(new Runnable() {
@@ -305,7 +305,7 @@ public class GPUImage {
         renderer.setRotation(Rotation.NORMAL,
                 mRenderer.isFlippedHorizontally(), mRenderer.isFlippedVertically());
         renderer.setScaleType(mScaleType);
-        PixelBuffer buffer = new PixelBuffer(bitmap.getWidth(), bitmap.getHeight());
+        PixelBuffer buffer = new PixelBuffer(outputWidth, outputHeight);
         buffer.setRenderer(renderer);
         renderer.setImageBitmap(bitmap, false);
         Bitmap result = buffer.getBitmap();
@@ -448,7 +448,7 @@ public class GPUImage {
 
         @Override
         protected Void doInBackground(final Void... params) {
-            Bitmap result = getBitmapWithFilterApplied(mBitmap);
+            Bitmap result = getBitmapWithFilterApplied(mBitmap, mBitmap.getWidth(), mBitmap.getHeight());
             saveImage(mFolderName, mFileName, result);
             return null;
         }
