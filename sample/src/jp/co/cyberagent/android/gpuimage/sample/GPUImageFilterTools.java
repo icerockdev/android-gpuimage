@@ -32,6 +32,7 @@ public class GPUImageFilterTools {
     public static void showDialog(final Context context,
             final OnGpuImageFilterChosenListener listener) {
         final FilterList filters = new FilterList();
+        filters.addFilter("UMF", FilterType.UMF);
         filters.addFilter("IR normal blend", FilterType.IR_NORMAL_BLEND);
         filters.addFilter("IR difference blend", FilterType.IR_DIFFERENCE_BLEND);
         filters.addFilter("Contrast", FilterType.CONTRAST);
@@ -307,6 +308,9 @@ public class GPUImageFilterTools {
             case TRANSFORM2D:
                 return new GPUImageTransformFilter();
 
+            case UMF:
+                return new GPUImageUnsharpMaskFilter(0.0f, 0.0f);
+
             default:
                 throw new IllegalStateException("No filter of that type!");
         }
@@ -334,7 +338,8 @@ public class GPUImageFilterTools {
         BLEND_DISSOLVE, BLEND_EXCLUSION, BLEND_SOURCE_OVER, BLEND_HARD_LIGHT, BLEND_LIGHTEN, BLEND_ADD, BLEND_DIVIDE, BLEND_MULTIPLY, BLEND_OVERLAY, BLEND_SCREEN, BLEND_ALPHA,
         BLEND_COLOR, BLEND_HUE, BLEND_SATURATION, BLEND_LUMINOSITY, BLEND_LINEAR_BURN, BLEND_SOFT_LIGHT, BLEND_SUBTRACT, BLEND_CHROMA_KEY, BLEND_NORMAL, LOOKUP_AMATORKA,
         GAUSSIAN_BLUR, CROSSHATCH, BOX_BLUR, CGA_COLORSPACE, DILATION, KUWAHARA, RGB_DILATION, SKETCH, TOON, SMOOTH_TOON, BULGE_DISTORTION, GLASS_SPHERE, HAZE, LAPLACIAN, NON_MAXIMUM_SUPPRESSION,
-        SPHERE_REFRACTION, SWIRL, WEAK_PIXEL_INCLUSION, FALSE_COLOR, COLOR_BALANCE, LEVELS_FILTER_MIN, BILATERAL_BLUR, HALFTONE, TRANSFORM2D, IR_NORMAL_BLEND, IR_DIFFERENCE_BLEND
+        SPHERE_REFRACTION, SWIRL, WEAK_PIXEL_INCLUSION, FALSE_COLOR, COLOR_BALANCE, LEVELS_FILTER_MIN, BILATERAL_BLUR, HALFTONE, TRANSFORM2D, IR_NORMAL_BLEND, IR_DIFFERENCE_BLEND,
+        UMF
     }
 
     private static class FilterList {
@@ -351,7 +356,9 @@ public class GPUImageFilterTools {
         private final Adjuster<? extends GPUImageFilter> adjuster;
 
         public FilterAdjuster(final GPUImageFilter filter) {
-            if (filter instanceof GPUImageSharpenFilter) {
+            if (filter instanceof GPUImageUnsharpMaskFilter) {
+                adjuster = new UnSharpAdjuster().filter(filter);
+            } else if (filter instanceof GPUImageSharpenFilter) {
                 adjuster = new SharpnessAdjuster().filter(filter);
             } else if (filter instanceof GPUImageSepiaFilter) {
                 adjuster = new SepiaAdjuster().filter(filter);
@@ -460,6 +467,14 @@ public class GPUImageFilterTools {
             @Override
             public void adjust(int percentage) {
                 getFilter().setOpacity(range(percentage, 0.0f, 1.0f));
+            }
+        }
+
+        private class UnSharpAdjuster extends Adjuster<GPUImageUnsharpMaskFilter> {
+            @Override
+            public void adjust(final int percentage) {
+                getFilter().setIntensity(range(percentage, 0.0f, 8.0f));
+                getFilter().setBlurRadius(range(percentage, 0.0f, 8.0f));
             }
         }
 

@@ -47,19 +47,29 @@ public class GPUImageTwoInputFilter extends GPUImageFilter {
     public int mFilterSourceTexture2 = OpenGlUtils.NO_TEXTURE;
     private ByteBuffer mTexture2CoordinatesBuffer;
     private Bitmap mBitmap;
+    private boolean isInputTexturesReversed;
 
     public GPUImageTwoInputFilter(String fragmentShader) {
-        this(VERTEX_SHADER, fragmentShader);
+        this(VERTEX_SHADER, fragmentShader, false);
+    }
+
+    public GPUImageTwoInputFilter(String fragmentShader, boolean isInputTexturesReversed) {
+        this(VERTEX_SHADER, fragmentShader, isInputTexturesReversed);
     }
 
     public GPUImageTwoInputFilter(String fragmentShader, int textureResourceId, Context context) {
-        this(VERTEX_SHADER, fragmentShader);
+        this(fragmentShader, textureResourceId, context, false);
+    }
+
+    public GPUImageTwoInputFilter(String fragmentShader, int textureResourceId, Context context, boolean isInputTexturesReversed) {
+        this(VERTEX_SHADER, fragmentShader, isInputTexturesReversed);
         Bitmap inputTexture = BitmapFactory.decodeResource(context.getResources(), textureResourceId);
         setBitmap(inputTexture);
     }
 
-    public GPUImageTwoInputFilter(String vertexShader, String fragmentShader) {
+    public GPUImageTwoInputFilter(String vertexShader, String fragmentShader, boolean isInputTexturesReversed) {
         super(vertexShader, fragmentShader);
+        this.isInputTexturesReversed = isInputTexturesReversed;
         setRotation(Rotation.NORMAL, false, false);
     }
 
@@ -95,6 +105,21 @@ public class GPUImageTwoInputFilter extends GPUImageFilter {
                 }
             }
         });
+    }
+
+    public void setFilterSourceTexture2(final int filterSourceTexture2) {
+        runOnDraw(new Runnable() {
+            public void run() {
+                if (mFilterSourceTexture2 == OpenGlUtils.NO_TEXTURE) {
+                    GLES20.glActiveTexture(GLES20.GL_TEXTURE3);
+                    mFilterSourceTexture2 = filterSourceTexture2;
+                }
+            }
+        });
+    }
+
+    public boolean isInputTexturesReversed() {
+        return isInputTexturesReversed;
     }
 
     public Bitmap getBitmap() {
