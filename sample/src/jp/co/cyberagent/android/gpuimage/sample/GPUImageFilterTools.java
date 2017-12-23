@@ -36,6 +36,7 @@ public class GPUImageFilterTools {
         filters.addFilter("IR difference blend", FilterType.IR_DIFFERENCE_BLEND);
         filters.addFilter("IR RAIN SEPIA", FilterType.IR_RAIN_SEPIA);
         filters.addFilter("IR_UNSHARP_MASK", FilterType.IR_UNSHARP_MASK);
+        filters.addFilter("SOFT_ELEGANCE", FilterType.SOFT_ELEGANCE);
         filters.addFilter("Contrast", FilterType.CONTRAST);
         filters.addFilter("Invert", FilterType.INVERT);
         filters.addFilter("Pixelation", FilterType.PIXELATION);
@@ -134,7 +135,7 @@ public class GPUImageFilterTools {
     private static GPUImageFilter createFilterForType(final Context context, final FilterType type) {
         switch (type) {
             case IR_UNSHARP_MASK:
-                IRGPUImageUnsharpMaskFilter unsharpMaskFilter = new IRGPUImageUnsharpMaskFilter(4.0f, 4.0f);
+                IRGPUImageUnsharpMaskFilter unsharpMaskFilter = new IRGPUImageUnsharpMaskFilter();
                 return unsharpMaskFilter;
             case IR_RAIN_SEPIA:
 
@@ -158,6 +159,8 @@ public class GPUImageFilterTools {
                 gpuGroupFilter.addFilter(differenceBlendFilter);
 
                 return gpuGroupFilter;
+            case SOFT_ELEGANCE:
+                return new GPUImageSoftEleganceFilter(context);
             case IR_NORMAL_BLEND:
                 return new IRGPUImageNormalBlendFilter(R.drawable.ic_launcher, context);
             case IR_DIFFERENCE_BLEND:
@@ -362,7 +365,7 @@ public class GPUImageFilterTools {
         BLEND_COLOR, BLEND_HUE, BLEND_SATURATION, BLEND_LUMINOSITY, BLEND_LINEAR_BURN, BLEND_SOFT_LIGHT, BLEND_SUBTRACT, BLEND_CHROMA_KEY, BLEND_NORMAL, LOOKUP_AMATORKA,
         GAUSSIAN_BLUR, CROSSHATCH, BOX_BLUR, CGA_COLORSPACE, DILATION, KUWAHARA, RGB_DILATION, SKETCH, TOON, SMOOTH_TOON, BULGE_DISTORTION, GLASS_SPHERE, HAZE, LAPLACIAN, NON_MAXIMUM_SUPPRESSION,
         SPHERE_REFRACTION, SWIRL, WEAK_PIXEL_INCLUSION, FALSE_COLOR, COLOR_BALANCE, LEVELS_FILTER_MIN, BILATERAL_BLUR, HALFTONE, TRANSFORM2D,
-        IR_NORMAL_BLEND, IR_DIFFERENCE_BLEND, IR_RAIN_SEPIA, IR_UNSHARP_MASK
+        IR_NORMAL_BLEND, IR_DIFFERENCE_BLEND, IR_RAIN_SEPIA, IR_UNSHARP_MASK, SOFT_ELEGANCE
     }
 
     private static class FilterList {
