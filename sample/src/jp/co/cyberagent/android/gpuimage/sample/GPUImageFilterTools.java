@@ -37,7 +37,11 @@ public class GPUImageFilterTools {
         filters.addFilter("IR RAIN SEPIA", FilterType.IR_RAIN_SEPIA);
         filters.addFilter("IR_UNSHARP_MASK", FilterType.IR_UNSHARP_MASK);
         filters.addFilter("SOFT_ELEGANCE", FilterType.SOFT_ELEGANCE);
-        filters.addFilter("ADAPTIVE_TRESHOLD", FilterType.ADAPTIVE_TRESHOLD);
+        filters.addFilter("ADAPTIVE_THRESHOLD", FilterType.ADAPTIVE_THRESHOLD);
+        filters.addFilter("MISS_ETIKATE", FilterType.MISS_ETIKATE);
+        filters.addFilter("LUMINANCE_THRESHOLD", FilterType.LUMINANCE_THRESHOLD);
+        filters.addFilter("KUWAHARA_R3", FilterType.KUWAHARA_RADIUS3);
+        filters.addFilter("MEDIAN", FilterType.MEDIAN);
         filters.addFilter("Contrast", FilterType.CONTRAST);
         filters.addFilter("Invert", FilterType.INVERT);
         filters.addFilter("Pixelation", FilterType.PIXELATION);
@@ -162,12 +166,20 @@ public class GPUImageFilterTools {
                 return gpuGroupFilter;
             case SOFT_ELEGANCE:
                 return new GPUImageSoftEleganceFilter(context);
-            case ADAPTIVE_TRESHOLD:
+            case ADAPTIVE_THRESHOLD:
                 return new IRGPUImageAdaptiveThresholdFilter(16.0f);
             case IR_NORMAL_BLEND:
                 return new IRGPUImageNormalBlendFilter(R.drawable.ic_launcher, context);
             case IR_DIFFERENCE_BLEND:
                 return new IRGPUImageDifferenceBlendFilter(R.drawable.ic_launcher, context);
+            case MISS_ETIKATE:
+                return new GPUImageMissEtikateFilter(context);
+            case MEDIAN:
+                return new GPUImageMedianFilter();
+            case KUWAHARA_RADIUS3:
+                return new GPUImageKuwaharaRadius3Filter();
+            case LUMINANCE_THRESHOLD:
+                return new GPUImageLuminanceThresholdFilter();
             case CONTRAST:
                 return new GPUImageContrastFilter(2.0f);
             case GAMMA:
@@ -368,7 +380,8 @@ public class GPUImageFilterTools {
         BLEND_COLOR, BLEND_HUE, BLEND_SATURATION, BLEND_LUMINOSITY, BLEND_LINEAR_BURN, BLEND_SOFT_LIGHT, BLEND_SUBTRACT, BLEND_CHROMA_KEY, BLEND_NORMAL, LOOKUP_AMATORKA,
         GAUSSIAN_BLUR, CROSSHATCH, BOX_BLUR, CGA_COLORSPACE, DILATION, KUWAHARA, RGB_DILATION, SKETCH, TOON, SMOOTH_TOON, BULGE_DISTORTION, GLASS_SPHERE, HAZE, LAPLACIAN, NON_MAXIMUM_SUPPRESSION,
         SPHERE_REFRACTION, SWIRL, WEAK_PIXEL_INCLUSION, FALSE_COLOR, COLOR_BALANCE, LEVELS_FILTER_MIN, BILATERAL_BLUR, HALFTONE, TRANSFORM2D,
-        IR_NORMAL_BLEND, IR_DIFFERENCE_BLEND, IR_RAIN_SEPIA, IR_UNSHARP_MASK, SOFT_ELEGANCE, ADAPTIVE_TRESHOLD
+        IR_NORMAL_BLEND, IR_DIFFERENCE_BLEND, IR_RAIN_SEPIA, IR_UNSHARP_MASK, SOFT_ELEGANCE, ADAPTIVE_THRESHOLD,
+        MISS_ETIKATE, LUMINANCE_THRESHOLD, KUWAHARA_RADIUS3, MEDIAN
     }
 
     private static class FilterList {
