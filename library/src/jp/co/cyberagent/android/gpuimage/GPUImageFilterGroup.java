@@ -18,13 +18,14 @@ package jp.co.cyberagent.android.gpuimage;
 
 import android.annotation.SuppressLint;
 import android.opengl.GLES20;
-import jp.co.cyberagent.android.gpuimage.util.TextureRotationUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.co.cyberagent.android.gpuimage.util.TextureRotationUtil;
 
 import static jp.co.cyberagent.android.gpuimage.GPUImageRenderer.CUBE;
 import static jp.co.cyberagent.android.gpuimage.util.TextureRotationUtil.TEXTURE_NO_ROTATION;
@@ -178,7 +179,7 @@ public class GPUImageFilterGroup extends GPUImageFilter {
      * @see jp.co.cyberagent.android.gpuimage.GPUImageFilter#onDraw(int,
      * java.nio.FloatBuffer, java.nio.FloatBuffer)
      */
-    @SuppressLint("WrongCall")    
+    @SuppressLint("WrongCall")
     @Override
     public void onDraw(final int textureId, final FloatBuffer cubeBuffer,
                        final FloatBuffer textureBuffer) {
@@ -189,30 +190,54 @@ public class GPUImageFilterGroup extends GPUImageFilter {
         if (mMergedFilters != null) {
             int size = mMergedFilters.size();
             int previousTexture = textureId;
+
             for (int i = 0; i < size; i++) {
                 GPUImageFilter filter = mMergedFilters.get(i);
-                boolean isNotLast = i < size - 1;
+                int lastPosition = size - 1;
+                boolean isNotLast = i < lastPosition;
+
                 if (isNotLast) {
                     GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffers[i]);
                     GLES20.glClearColor(0, 0, 0, 0);
                 }
 
-                if (i == 0) {
-                    filter.onDraw(previousTexture, cubeBuffer, textureBuffer);
-                } else if (i == size - 1) {
-                    if (filter instanceof GPUImageTwoInputFilter && ((GPUImageTwoInputFilter) filter).getFilterSource2() != null) {
-                        ((GPUImageTwoInputFilter) filter).setFilterSourceTexture2(previousTexture);
-                        filter.onDraw(mFrameBufferTextures[i-3], mGLCubeBuffer, (size % 2 == 0) ? mGLTextureFlipBuffer : mGLTextureBuffer);
+                FloatBuffer currentCubeBuffer = (i == 0) ? cubeBuffer : mGLCubeBuffer;
+                FloatBuffer currentTextureBuffer = (i == 0) ? textureBuffer : (i == lastPosition && size % 2 == 0) ? mGLTextureFlipBuffer : mGLTextureBuffer;
+
+
+                if (filter instanceof GPUImageTwoInputFilter) {
+                    int firstTexturePosition = i - ((GPUImageTwoInputFilter) filter).getFirstInputNumberOfItemsBack();
+                    int secondTexturePosition = (((GPUImageTwoInputFilter) filter).getSecondInputNumberOfItemsBack() == GPUImageTwoInputFilter.BITMAP_INPUT) ?
+                            GPUImageTwoInputFilter.BITMAP_INPUT :
+                            i - ((GPUImageTwoInputFilter) filter).getSecondInputNumberOfItemsBack();
+//
+                    int firstTexture;
+                    int secondTexture;
+//
+                    // вышли за границу массива текстур, значит берем исходную текстуру
+                    if (firstTexturePosition < 0 && firstTexturePosition != GPUImageTwoInputFilter.BITMAP_INPUT) {
+                        firstTexture = textureId;
                     } else {
-                        filter.onDraw(previousTexture, mGLCubeBuffer, (size % 2 == 0) ? mGLTextureFlipBuffer : mGLTextureBuffer);
+                        firstTexture = mFrameBufferTextures[firstTexturePosition];
                     }
+
+                    // вышли за границу массива текстур, значит берем исходную текстуру
+                    if (secondTexturePosition < 0 && secondTexturePosition != GPUImageTwoInputFilter.BITMAP_INPUT) {
+                        secondTexture = textureId;
+                    } else if (secondTexturePosition == GPUImageTwoInputFilter.BITMAP_INPUT) {
+                        // не нужно задавать вторую тектуру, она задана через битмап
+                        secondTexture = -1;
+                    } else {
+                        secondTexture = mFrameBufferTextures[secondTexturePosition];
+                    }
+
+                    if (secondTexture != -1) {
+                        ((GPUImageTwoInputFilter) filter).setFilterSourceTexture2(secondTexture);
+                    }
+
+                    filter.onDraw(firstTexture, currentCubeBuffer, currentTextureBuffer);
                 } else {
-                    if (filter instanceof GPUImageTwoInputFilter && ((GPUImageTwoInputFilter) filter).getFilterSource2() != null) {
-                        ((GPUImageTwoInputFilter) filter).setFilterSourceTexture2(previousTexture);
-                        filter.onDraw(mFrameBufferTextures[i-3], mGLCubeBuffer, mGLTextureBuffer);
-                    } else {
-                        filter.onDraw(previousTexture, mGLCubeBuffer, mGLTextureBuffer);
-                    }
+                    filter.onDraw(previousTexture, currentCubeBuffer, currentTextureBuffer);
                 }
 
                 if (isNotLast) {
@@ -221,7 +246,7 @@ public class GPUImageFilterGroup extends GPUImageFilter {
                 }
             }
         }
-     }
+    }
 
     /**
      * Gets the filters.

@@ -47,7 +47,12 @@ public class GPUImageTwoInputFilter extends GPUImageFilter {
     public int mFilterSourceTexture2 = OpenGlUtils.NO_TEXTURE;
     private ByteBuffer mTexture2CoordinatesBuffer;
     private Bitmap mBitmap;
-    private GPUImageFilter mFilterSource2;
+
+    public static final int BITMAP_INPUT = -100;
+    public static final int PREVIOUS_INPUT = 1;
+
+    private int mFirstInputNumberOfItemsBack = 1;
+    private int mSecondInputNumberOfItemsBack = BITMAP_INPUT;
 
     public GPUImageTwoInputFilter(String fragmentShader) {
         this(VERTEX_SHADER, fragmentShader);
@@ -99,23 +104,15 @@ public class GPUImageTwoInputFilter extends GPUImageFilter {
     }
 
     public void setFilterSourceTexture2(final int filterSourceTexture2) {
-        runOnDraw(new Runnable() {
-            public void run() {
-                if (mFilterSourceTexture2 == OpenGlUtils.NO_TEXTURE) {
-
-                    GLES20.glActiveTexture(GLES20.GL_TEXTURE3);
+//        runOnDraw(new Runnable() {
+//            public void run() {
+//                if (mFilterSourceTexture2 == OpenGlUtils.NO_TEXTURE) {
+//
+//                    GLES20.glActiveTexture(GLES20.GL_TEXTURE3);
                     mFilterSourceTexture2 = filterSourceTexture2;
-                }
-            }
-        });
-    }
-
-    public GPUImageFilter getFilterSource2() {
-        return mFilterSource2;
-    }
-
-    public void setFilterSource2(GPUImageFilter filterSource2) {
-        mFilterSource2 = filterSource2;
+//                }
+//            }
+//        });
     }
 
     public Bitmap getBitmap() {
@@ -157,5 +154,21 @@ public class GPUImageTwoInputFilter extends GPUImageFilter {
         fBuffer.flip();
 
         mTexture2CoordinatesBuffer = bBuffer;
+    }
+
+    public int getFirstInputNumberOfItemsBack() {
+        return mFirstInputNumberOfItemsBack;
+    }
+
+    public void setFirstInputNumberOfItemsBack(int firstInputNumberOfItemsBack) {
+        mFirstInputNumberOfItemsBack = firstInputNumberOfItemsBack;
+    }
+
+    public int getSecondInputNumberOfItemsBack() {
+        return mSecondInputNumberOfItemsBack;
+    }
+
+    public void setSecondInputNumberOfItemsBack(int secondInputNumberOfItemsBack) {
+        mSecondInputNumberOfItemsBack = secondInputNumberOfItemsBack;
     }
 }
