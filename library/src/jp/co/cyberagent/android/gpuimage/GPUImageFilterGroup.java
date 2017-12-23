@@ -205,15 +205,18 @@ public class GPUImageFilterGroup extends GPUImageFilter {
                 FloatBuffer currentTextureBuffer = (i == 0) ? textureBuffer : (i == lastPosition && size % 2 == 0) ? mGLTextureFlipBuffer : mGLTextureBuffer;
 
 
+                /**
+                 * @see GPUImageTwoInputFilter
+                 */
                 if (filter instanceof GPUImageTwoInputFilter) {
                     int firstTexturePosition = i - ((GPUImageTwoInputFilter) filter).getFirstInputNumberOfItemsBack();
                     int secondTexturePosition = (((GPUImageTwoInputFilter) filter).getSecondInputNumberOfItemsBack() == GPUImageTwoInputFilter.BITMAP_INPUT) ?
                             GPUImageTwoInputFilter.BITMAP_INPUT :
                             i - ((GPUImageTwoInputFilter) filter).getSecondInputNumberOfItemsBack();
-//
+
                     int firstTexture;
                     int secondTexture;
-//
+
                     // вышли за границу массива текстур, значит берем исходную текстуру
                     if (firstTexturePosition < 0 && firstTexturePosition != GPUImageTwoInputFilter.BITMAP_INPUT) {
                         firstTexture = textureId;

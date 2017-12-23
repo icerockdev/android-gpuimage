@@ -27,6 +27,43 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 
+/**
+ * Класс которому можно задать на вход 2 текстуры
+ *
+ * По умолчанию, на первый вход принимает предыдущую текстуру, на второй изображение из конструктора или метода
+ * @see #setBitmap(Bitmap)
+ * На первый вход задать bipmap нельзя.
+ *
+ * Если нужно указать на входы не предыдущую текстуру и не bitmap, то стоит использовать эти параметры:
+ * mFirstInputNumberOfItemsBack количество которое нужно вычесть из позиции текущего фильтра для получения первой текстуры
+ * mSecondInputNumberOfItemsBack количество которое нужно вычесть из позиции текущего фильтра для получения второй текстуры
+ *
+ * Так как GPUImage все группы фильтров разворачивает в линейный список, и хранит у себя массив полученных
+ * на каждом шаге текстур, то используя индексы можно получить необходимые текстуры.
+ *
+ * Пример использования можно посмотреть в классе IRGPUImageUnsharpMaskFilter
+ * @see IRGPUImageUnsharpMaskFilter
+ *
+ * Пример:
+ * Имеются оригинальное изображение - O, и 2 фильтра - F1, F2, причем F2 наследуется от GPUImageTwoInputFilter.
+ * Необходимо передать O на вход F1, полученный результат передать на второй вход F2.
+ * А на первый вход F2 нужно передать O.
+ *
+ * Создаем в группу в которой выстраиваем цепочку:
+ * первым складываем F1 в группу, за ним добавляем F2 в группу.
+ * Если F1 групповой фильтр то для указания  mFirstInputNumberOfItemsBack или  mSecondInputNumberOfItemsBack
+ * нужно взять количество фильтров которое содержит F1, F1.getMergedFilters.
+ * Если F1 не групповой фильтр, то указываем 1.
+ * Так же к количеству нужно добавить 1, если нужно взять не последнюю текстуру.
+ * F2.setFirstInputNumberOfItemsBack(F1.getMergedFilters() + 1) таким образом возьмем текстуру которая подавалась на вход F1
+ *
+ * А для указания на вход последней текстуры можно использовать PREVIOUS_INPUT
+ *
+ * F2.setSecondInputNumberOfItemsBack(GPUImageTwoinputFilter.PREVIUOS_INPUT)
+ *
+ * Обработка получения текстур находится в GPUImageFilterGroup#onDraw
+ * @see GPUImageFilterGroup#onDraw(int, FloatBuffer, FloatBuffer)
+ */
 public class GPUImageTwoInputFilter extends GPUImageFilter {
     private static final String VERTEX_SHADER = "attribute vec4 position;\n" +
             "attribute vec4 inputTextureCoordinate;\n" +
