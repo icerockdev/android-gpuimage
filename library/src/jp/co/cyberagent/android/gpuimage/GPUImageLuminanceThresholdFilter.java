@@ -19,25 +19,6 @@ public class GPUImageLuminanceThresholdFilter extends GPUImageFilter {
                     "     highp float thresholdResult = step(threshold, luminance);\n" +
                     "     \n" +
                     "     gl_FragColor = vec4(vec3(thresholdResult), textureColor.w);\n" +
-                    " }\n" +
-                    ");\n" +
-                    "#else\n" +
-                    "NSString *const kGPUImageLuminanceThresholdFragmentShaderString = SHADER_STRING\n" +
-                    "(\n" +
-                    " varying vec2 textureCoordinate;\n" +
-                    " \n" +
-                    " uniform sampler2D inputImageTexture;\n" +
-                    " uniform float threshold;\n" +
-                    " \n" +
-                    " const vec3 W = vec3(0.2125, 0.7154, 0.0721);\n" +
-                    " \n" +
-                    " void main()\n" +
-                    " {\n" +
-                    "     vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);\n" +
-                    "     float luminance = dot(textureColor.rgb, W);\n" +
-                    "     float thresholdResult = step(threshold, luminance);\n" +
-                    "     \n" +
-                    "     gl_FragColor = vec4(vec3(thresholdResult), textureColor.w);\n" +
                     " }";
 
 
