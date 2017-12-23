@@ -1,14 +1,14 @@
 package jp.co.cyberagent.android.gpuimage;
 
-public class IRGPUImageAdaptiveTresholdFilter extends GPUImageFilterGroup {
+public class IRGPUImageAdaptiveThresholdFilter extends GPUImageFilterGroup {
 
     private GPUImageBoxBlurFilter mBoxBlurFilter;
 
-    public IRGPUImageAdaptiveTresholdFilter() {
+    public IRGPUImageAdaptiveThresholdFilter() {
         this(4.0f);
     }
 
-    public IRGPUImageAdaptiveTresholdFilter(float blurRadius) {
+    public IRGPUImageAdaptiveThresholdFilter(float blurRadius) {
 
         GPUImageGrayscaleFilter grayscaleFilter = new GPUImageGrayscaleFilter();
         addFilter(grayscaleFilter);
@@ -16,10 +16,10 @@ public class IRGPUImageAdaptiveTresholdFilter extends GPUImageFilterGroup {
         mBoxBlurFilter = new GPUImageBoxBlurFilter(blurRadius);
         addFilter(mBoxBlurFilter);
 
-        GPUImageAdaptiveThesholdFilter adaptiveThesholdFilter = new GPUImageAdaptiveThesholdFilter();
-        addFilter(adaptiveThesholdFilter);
+        GPUImageAdaptiveThresholdFilter adaptiveThresholdFilter = new GPUImageAdaptiveThresholdFilter();
+        addFilter(adaptiveThresholdFilter);
 
-        adaptiveThesholdFilter.setSecondInputNumberOfItemsBack(mBoxBlurFilter.getMergedFilters().size() + 1);
+        adaptiveThresholdFilter.setSecondInputNumberOfItemsBack(mBoxBlurFilter.getMergedFilters().size() + 1);
     }
 
     public void setBlurRadius(final float radius) {

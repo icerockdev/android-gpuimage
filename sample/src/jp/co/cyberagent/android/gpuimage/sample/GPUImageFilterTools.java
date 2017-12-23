@@ -163,7 +163,7 @@ public class GPUImageFilterTools {
             case SOFT_ELEGANCE:
                 return new GPUImageSoftEleganceFilter(context);
             case ADAPTIVE_TRESHOLD:
-                return new IRGPUImageAdaptiveTresholdFilter(16.0f);
+                return new IRGPUImageAdaptiveThresholdFilter(16.0f);
             case IR_NORMAL_BLEND:
                 return new IRGPUImageNormalBlendFilter(R.drawable.ic_launcher, context);
             case IR_DIFFERENCE_BLEND:
@@ -451,7 +451,7 @@ public class GPUImageFilterTools {
                 adjuster = new RotateAdjuster().filter(filter);
             } else if (filter instanceof IRGPUImageOpacityBlendFilter) {
                 adjuster = new IROpacityAdjuster().filter(filter);
-            } else if (filter instanceof IRGPUImageAdaptiveTresholdFilter) {
+            } else if (filter instanceof IRGPUImageAdaptiveThresholdFilter) {
                 adjuster = new IRAdaptiveTresholdAdjuster().filter(filter);
             }
             else {
@@ -501,7 +501,7 @@ public class GPUImageFilterTools {
             }
         }
 
-        private class IRAdaptiveTresholdAdjuster extends Adjuster<IRGPUImageAdaptiveTresholdFilter> {
+        private class IRAdaptiveTresholdAdjuster extends Adjuster<IRGPUImageAdaptiveThresholdFilter> {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setBlurRadius(range(percentage, 0.0f, 16.0f));

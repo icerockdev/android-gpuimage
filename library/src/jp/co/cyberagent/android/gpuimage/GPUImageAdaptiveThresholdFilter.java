@@ -2,7 +2,7 @@ package jp.co.cyberagent.android.gpuimage;
 
 import android.content.Context;
 
-public class GPUImageAdaptiveThesholdFilter extends GPUImageTwoInputFilter {
+public class GPUImageAdaptiveThresholdFilter extends GPUImageTwoInputFilter {
 
     private static final String FRAGMENT_SHADER_STRING =
             " varying highp vec2 textureCoordinate;\n" +
@@ -20,7 +20,7 @@ public class GPUImageAdaptiveThesholdFilter extends GPUImageTwoInputFilter {
                     "     gl_FragColor = vec4(vec3(thresholdResult), 1.0);\n" +
                     " }";
 
-    public GPUImageAdaptiveThesholdFilter() {
+    public GPUImageAdaptiveThresholdFilter() {
         super(FRAGMENT_SHADER_STRING);
 
     }
