@@ -27,7 +27,7 @@ public class GPUImageUnsharpMaskFilter extends GPUImageFilterGroup {
         mUnsharpMaskFilter.setIntensity(intensity);
     }
 
-    public void setBlurRadius(final float radius) {
+    public void setBlurRadiusInPixels(final float radius) {
         mBlurFilter.setBlurSize(radius);
     }
 }

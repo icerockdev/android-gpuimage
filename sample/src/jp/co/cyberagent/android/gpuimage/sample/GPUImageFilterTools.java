@@ -525,7 +525,7 @@ public class GPUImageFilterTools {
             @Override
             public void adjust(final int percentage) {
                 getFilter().setIntensity(range(percentage, 0.0f, 8.0f));
-                getFilter().setBlurRadius(range(percentage, 0.0f, 8.0f));
+                getFilter().setBlurRadiusInPixels(range(percentage, 0.0f, 8.0f));
             }
         }
 
