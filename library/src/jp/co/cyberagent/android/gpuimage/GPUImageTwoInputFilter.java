@@ -41,8 +41,8 @@ import android.opengl.GLES20;
  * Так как GPUImage все группы фильтров разворачивает в линейный список, и хранит у себя массив полученных
  * на каждом шаге текстур, то используя индексы можно получить необходимые текстуры.
  *
- * Пример использования можно посмотреть в классе IRGPUImageUnsharpMaskFilter
- * @see IRGPUImageUnsharpMaskFilter
+ * Пример использования можно посмотреть в классе GPUImageUnsharpMaskFilter
+ * @see GPUImageUnsharpMaskFilter
  *
  * Пример:
  * Имеются оригинальное изображение - O, и 2 фильтра - F1, F2, причем F2 наследуется от GPUImageTwoInputFilter.
