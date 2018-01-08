@@ -1,6 +1,7 @@
 package jp.co.cyberagent.android.gpuimage;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 
 public class IRGPUImageOpacityBlendFilter extends GPUImageTwoInputFilter {
@@ -43,15 +44,24 @@ public class IRGPUImageOpacityBlendFilter extends GPUImageTwoInputFilter {
 
 
     public IRGPUImageOpacityBlendFilter() {
-        this(DEFAULT_BLEND_SHADER_HELPER_FUNCTION, DEFAULT_BLEND_SHADER_CODE, DEFAULT_OPACITY);
+        this(DEFAULT_BLEND_SHADER_HELPER_FUNCTION, DEFAULT_BLEND_SHADER_CODE);
     }
+
     public IRGPUImageOpacityBlendFilter(String blendShaderCode, float opacity) {
         this(DEFAULT_BLEND_SHADER_HELPER_FUNCTION, blendShaderCode, opacity);
+    }
+
+    public IRGPUImageOpacityBlendFilter(String blendShaderCode) {
+        this(DEFAULT_BLEND_SHADER_HELPER_FUNCTION, blendShaderCode);
     }
 
     public IRGPUImageOpacityBlendFilter(String blendShaderHelperFunctionsCode, String blendShaderCode, float opacity) {
         super(String.format(OPACITY_FRAGMENT_SHADER_TEMPLATE, blendShaderHelperFunctionsCode, blendShaderCode));
         mOpacity = opacity;
+    }
+
+    public IRGPUImageOpacityBlendFilter(String blendShaderHelperFunctionsCode, String blendShaderCode) {
+        super(String.format(OPACITY_FRAGMENT_SHADER_TEMPLATE, blendShaderHelperFunctionsCode, blendShaderCode));
     }
 
     public IRGPUImageOpacityBlendFilter(String blendShaderCode,
@@ -68,7 +78,6 @@ public class IRGPUImageOpacityBlendFilter extends GPUImageTwoInputFilter {
                                         int textureResourceId, Context context) {
         super(String.format(OPACITY_FRAGMENT_SHADER_TEMPLATE, blendShaderHelperFunctionsCode, blendShaderCode),
                 textureResourceId, context);
-        mOpacity = DEFAULT_OPACITY;
     }
 
     public IRGPUImageOpacityBlendFilter(String blendShaderHelperFunctionsCode, String blendShaderCode, float opacity,
@@ -78,6 +87,15 @@ public class IRGPUImageOpacityBlendFilter extends GPUImageTwoInputFilter {
         mOpacity = opacity;
     }
 
+    public IRGPUImageOpacityBlendFilter(String blendShaderCode, Bitmap secondTexture) {
+        this(DEFAULT_BLEND_SHADER_HELPER_FUNCTION, blendShaderCode, secondTexture);
+    }
+
+    public IRGPUImageOpacityBlendFilter(String blendShaderHelperFunctionsCode, String blendShaderCode, Bitmap secondTexture) {
+        super(String.format(OPACITY_FRAGMENT_SHADER_TEMPLATE, blendShaderHelperFunctionsCode, blendShaderCode),
+                secondTexture);
+        mOpacity = DEFAULT_OPACITY;
+    }
 
     @Override
     public void onInit() {

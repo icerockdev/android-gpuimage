@@ -1,6 +1,7 @@
 package jp.co.cyberagent.android.gpuimage;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 public class IRGPUImageGlowBlendFilter extends IRGPUImageOpacityBlendFilter {
 
@@ -15,5 +16,13 @@ public class IRGPUImageGlowBlendFilter extends IRGPUImageOpacityBlendFilter {
 
     public IRGPUImageGlowBlendFilter(float opacity, int textureResourceId, Context context) {
         super(BlendHelperFunctions.reflectF(), BLEND_SHADER_CODE, opacity, textureResourceId, context);
+    }
+
+    public IRGPUImageGlowBlendFilter(Bitmap secondTexture) {
+        super(BlendHelperFunctions.reflectF(), BLEND_SHADER_CODE, secondTexture);
+    }
+
+    public IRGPUImageGlowBlendFilter() {
+        super(BlendHelperFunctions.reflectF(), BLEND_SHADER_CODE);
     }
 }
