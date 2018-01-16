@@ -101,6 +101,11 @@ public class GPUImageTwoInputFilter extends GPUImageFilter {
         setBitmap(inputTexture);
     }
 
+    public GPUImageTwoInputFilter(String fragmentShader, Bitmap secondTexture) {
+        this(VERTEX_SHADER, fragmentShader);
+        setBitmap(secondTexture);
+    }
+
     public GPUImageTwoInputFilter(String vertexShader, String fragmentShader) {
         super(vertexShader, fragmentShader);
         setRotation(Rotation.NORMAL, false, false);

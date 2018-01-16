@@ -1,6 +1,7 @@
 package jp.co.cyberagent.android.gpuimage;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 public class IRGPUImageColorDodgeBlendFilter extends IRGPUImageOpacityBlendFilter {
 
@@ -15,5 +16,13 @@ public class IRGPUImageColorDodgeBlendFilter extends IRGPUImageOpacityBlendFilte
 
     public IRGPUImageColorDodgeBlendFilter(float opacity, int textureResourceId, Context context) {
         super(BlendHelperFunctions.colorDodgeF(), BLEND_SHADER_CODE, opacity, textureResourceId, context);
+    }
+
+    public IRGPUImageColorDodgeBlendFilter(Bitmap secondTexture) {
+        super(BlendHelperFunctions.colorDodgeF(), BLEND_SHADER_CODE, secondTexture);
+    }
+
+    public IRGPUImageColorDodgeBlendFilter() {
+        super(BlendHelperFunctions.colorDodgeF(), BLEND_SHADER_CODE);
     }
 }

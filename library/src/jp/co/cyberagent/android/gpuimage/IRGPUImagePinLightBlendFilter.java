@@ -1,6 +1,7 @@
 package jp.co.cyberagent.android.gpuimage;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 public class IRGPUImagePinLightBlendFilter extends IRGPUImageOpacityBlendFilter {
 
@@ -15,5 +16,13 @@ public class IRGPUImagePinLightBlendFilter extends IRGPUImageOpacityBlendFilter 
 
     public IRGPUImagePinLightBlendFilter(float opacity, int textureResourceId, Context context) {
         super(BlendHelperFunctions.pinLightF(), BLEND_SHADER_CODE, opacity, textureResourceId, context);
+    }
+
+    public IRGPUImagePinLightBlendFilter(Bitmap secondTexture) {
+        super(BlendHelperFunctions.pinLightF(), BLEND_SHADER_CODE, secondTexture);
+    }
+
+    public IRGPUImagePinLightBlendFilter() {
+        super(BlendHelperFunctions.pinLightF(), BLEND_SHADER_CODE);
     }
 }
