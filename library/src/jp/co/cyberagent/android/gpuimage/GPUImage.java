@@ -49,7 +49,7 @@ import java.util.concurrent.Semaphore;
  * tasks through a simple interface.
  */
 public class GPUImage {
-    private final Context mContext;
+    private Context mContext;
     private final GPUImageRenderer mRenderer;
     private GLSurfaceView mGlSurfaceView;
     private GPUImageFilter mFilter;
@@ -62,11 +62,16 @@ public class GPUImage {
      * @param context the context
      */
     public GPUImage(final Context context) {
+        this();
+
         if (!supportsOpenGLES2(context)) {
             throw new IllegalStateException("OpenGL ES 2.0 is not supported on this phone.");
         }
 
         mContext = context;
+    }
+
+    public GPUImage() {
         mFilter = new GPUImageFilter();
         mRenderer = new GPUImageRenderer(mFilter);
     }
@@ -249,6 +254,9 @@ public class GPUImage {
     }
 
     private String getPath(final Uri uri) {
+
+        if (mContext == null) throw new RuntimeException("Could not get path, context is null");
+
         String[] projection = {
                 MediaStore.Images.Media.DATA,
         };
@@ -403,11 +411,14 @@ public class GPUImage {
     }
 
     private int getOutputWidth() {
+
         if (mRenderer != null && mRenderer.getFrameWidth() != 0) {
             return mRenderer.getFrameWidth();
         } else if (mCurrentBitmap != null) {
             return mCurrentBitmap.getWidth();
         } else {
+            if (mContext == null) throw new RuntimeException("Could not get path, context is null");
+
             WindowManager windowManager =
                     (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
             Display display = windowManager.getDefaultDisplay();
@@ -421,6 +432,8 @@ public class GPUImage {
         } else if (mCurrentBitmap != null) {
             return mCurrentBitmap.getHeight();
         } else {
+            if (mContext == null) throw new RuntimeException("Could not get path, context is null");
+
             WindowManager windowManager =
                     (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
             Display display = windowManager.getDefaultDisplay();
@@ -439,6 +452,9 @@ public class GPUImage {
 
         public SaveTask(final Bitmap bitmap, final String folderName, final String fileName,
                 final OnPictureSavedListener listener) {
+
+            if (mContext == null) throw new RuntimeException("Could not get path, context is null");
+
             mBitmap = bitmap;
             mFolderName = folderName;
             mFileName = fileName;
@@ -494,6 +510,8 @@ public class GPUImage {
 
         public LoadImageUriTask(GPUImage gpuImage, Uri uri) {
             super(gpuImage);
+            if (mContext == null) throw new RuntimeException("Could not get path, context is null");
+
             mUri = uri;
         }
 
@@ -504,6 +522,7 @@ public class GPUImage {
                 if (mUri.getScheme().startsWith("http") || mUri.getScheme().startsWith("https")) {
                     inputStream = new URL(mUri.toString()).openStream();
                 } else {
+                    if (mContext == null) throw new RuntimeException("Could not get path, context is null");
                     inputStream = mContext.getContentResolver().openInputStream(mUri);
                 }
                 return BitmapFactory.decodeStream(inputStream, null, options);
